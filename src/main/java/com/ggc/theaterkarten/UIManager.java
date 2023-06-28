@@ -236,10 +236,6 @@ public class UIManager {
         deleteTicketsTab.setContent(createTicketDeleter());
         tabPane.getTabs().addAll(viewCustomersTab, viewTicketsTab, addTicketsTab, deleteTicketsTab);
 
-        // Create a layout for the employee interface
-        VBox employeeLayout = new VBox(10);
-        employeeLayout.setAlignment(Pos.CENTER);
-        employeeLayout.getChildren().addAll(tabPane);
         employeeScene = new Scene(tabPane, 800, 600);
         return employeeScene;
     }
