@@ -6,11 +6,11 @@ public class TheaterTicket {
     private String playName, customerName;
     private double price;
     private int seatNumber;
-    boolean isSold;
+    private String isSold;
     private Date date;
     private Time time;
 
-    public TheaterTicket(String playName, String customerName, double price, int seatNumber, boolean isSold, Date date, Time time) {
+    public TheaterTicket(String playName, String customerName, double price, int seatNumber, String isSold, Date date, Time time) {
         this.playName = playName;
         this.customerName = customerName;
         this.price = price;
@@ -52,11 +52,11 @@ public class TheaterTicket {
         this.seatNumber = seatNumber;
     }
 
-    public boolean isSold() {
+    public String isSold() {
         return isSold;
     }
 
-    public void setSold(boolean sold) {
+    public void setSold(String sold) {
         isSold = sold;
     }
 

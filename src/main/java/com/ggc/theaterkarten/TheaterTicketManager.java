@@ -47,9 +47,9 @@ public class TheaterTicketManager {
                 String[] data = line.split(",");
                 String customerName = data[0];
                 double price = Double.parseDouble(data[1]);
-                boolean isSold = false;
+                String isSold = "free";
                 if(data[2].equalsIgnoreCase("sold"))
-                    isSold = true;
+                    isSold = "sold";
                 String[] d = data[3].split("/");
                 Date date = new Date(Integer.parseInt(d[0]), Integer.parseInt(d[1]), Integer.parseInt(d[2]));
                 String[] t = data[4].split(":");
@@ -66,35 +66,44 @@ public class TheaterTicketManager {
         return theaterTickets;
     }
     // Methods to manage theater tickets
-    public boolean createTheaterTicket(String playName, double price, int seatNumber, Date date, Time time) throws IOException {
-        TheaterTicket ticket = new TheaterTicket(playName, "", price, seatNumber,false, date, time);
+    public boolean createTheaterTicket(String playName, double price, int seatNumber, Date date, Time time) throws Exception {
+        TheaterTicket ticket = new TheaterTicket(playName, "", price, seatNumber,"free", date, time);
         theaterTickets.add(ticket);
         createTheaterTicketFile(playName, price, seatNumber, date, time);
         return false;
     }
 
-    private void createTheaterTicketFile(String playName, double price, int seatNumber, Date date, Time time) throws IOException {
+    private void createTheaterTicketFile(String playName, double price, int seatNumber, Date date, Time time) throws Exception {
+        if(playName.equalsIgnoreCase("")
+                || (seatNumber < 1 || seatNumber > 100)
+                || price < 1 || date.getDay() < 1 || date.getDay() > 31
+                || date.getMonth() < 1 || date.getDay() > 12
+                || date.getYear() < 2020 || date.getDay() > 2030
+                || time.getHour() < 0 || time.getHour() > 24
+                || time.getMinute() < 0 || time.getHour() > 59)
+            throw new Exception();
         FileWriter theaterTicketFile = new FileWriter("src/main/resources/com/ggc/theaterkarten/Tickets/" + playName + seatNumber +".txt");
         theaterTicketFile.write(","+price+",free,"+date.toString() + "," + time.toString());
         theaterTicketFile.close();
     }
 
-    public boolean deleteTheaterTicket(String playName, int seatNumber) {
+    public boolean deleteTheaterTicket(String playName, int seatNumber) throws Exception {
         for (TheaterTicket ticket : theaterTickets) {
             if (ticket.getPlayName().equals(playName) && ticket.getSeatNumber() == seatNumber) {
                 theaterTickets.remove(ticket);
                 return deleteTheaterTicketFile(playName, seatNumber);
             }
         }
-        return false;
+        throw new Exception();
     }
 
-    private boolean deleteTheaterTicketFile(String playName, int seatNumber) {
+    private boolean deleteTheaterTicketFile(String playName, int seatNumber) throws Exception {
         File theaterTicketFile = new File("src/main/resources/com/ggc/theaterkarten/Tickets/" + playName + seatNumber +".txt");
+        System.out.println(playName + seatNumber);
         if (theaterTicketFile.delete()) {
             return true;
         } else {
-            return false;
+            throw new Exception();
         }
     }
 
@@ -120,6 +129,27 @@ public class TheaterTicketManager {
             }
         }
         return null;
+    }
+    public void updateTicket(TheaterTicket ticket, String customer) throws Exception {
+        if(ticket.getPlayName().equalsIgnoreCase("")
+                || (ticket.getSeatNumber() < 1 || ticket.getSeatNumber() > 99)
+                || ticket.getPrice() < 1 || (ticket.getDate().getDay() < 1 || ticket.getDate().getDay() > 31)
+                || (ticket.getDate().getMonth() < 1 || ticket.getDate().getDay() > 12)
+                || (ticket.getDate().getYear() < 2020 || ticket.getDate().getDay() > 2030)
+                || (ticket.getTime().getHour() < 0 || ticket.getTime().getHour() > 24)
+                || (ticket.getTime().getMinute() < 0 || ticket.getTime().getHour() > 59))
+            throw new Exception();
+        deleteTheaterTicketFile(ticket.getPlayName(), ticket.getSeatNumber());
+        FileWriter theaterTicketFile = new FileWriter("src/main/resources/com/ggc/theaterkarten/Tickets/" + ticket.getPlayName() + ticket.getSeatNumber() +".txt");
+        theaterTicketFile.write(customer + "," + ticket.getPrice() +","+ticket.isSold()+","+ ticket.getDate().toString() + ","+ticket.getTime().toString());
+        theaterTicketFile.close();
+    }
+    public List<TheaterTicket> getNotSoldTheaterTickets() {
+        List<TheaterTicket> tickets = new ArrayList<>();
+        for(TheaterTicket t : theaterTickets)
+            if(t.isSold().equalsIgnoreCase("free"))
+                tickets.add(t);
+        return tickets;
     }
 }
 

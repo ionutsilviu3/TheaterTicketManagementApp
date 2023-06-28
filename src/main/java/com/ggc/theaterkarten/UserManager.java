@@ -2,6 +2,7 @@ package com.ggc.theaterkarten;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -52,6 +53,56 @@ public class UserManager {
         for (String employeeName : employeeNames)
             employees.add(findEmployee(employeeName));
     }
+    public void createCustomer(String userName, String password, Double credit)
+    {
+        customers.add(new Customer(userName, password, credit));
+
+        try {
+            FileWriter fileWriter = new FileWriter("src/main/resources/com/ggc/theaterkarten/Customers/" + userName+".txt");
+            fileWriter.write(password +","+credit);
+            fileWriter.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred while saving the customer's information.");
+            e.printStackTrace();
+        }
+    }
+    public void createCustomer(Customer customer)
+    {
+        customers.add(customer);
+        try {
+            FileWriter fileWriter = new FileWriter("src/main/resources/com/ggc/theaterkarten/Customers/" + customer.getName()+".txt");
+            fileWriter.write(customer.getPassword() +","+customer.getCredit());
+            fileWriter.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred while saving the customer's information.");
+            e.printStackTrace();
+        }
+    }
+
+    public void createEmployee(String userName, String password)
+    {
+        employees.add(new Employee(userName, password));
+        try {
+            FileWriter fileWriter = new FileWriter("src/main/resources/com/ggc/theaterkarten/Employees/" + userName+".txt");
+            fileWriter.write(password);
+            fileWriter.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred while saving the employee's information.");
+            e.printStackTrace();
+        }
+    }
+    public void createEmployee(Employee employee)
+    {
+        employees.add(employee);
+        try {
+            FileWriter fileWriter = new FileWriter("src/main/resources/com/ggc/theaterkarten/Employees/" +employee.getName()+".txt");
+            fileWriter.write(employee.getPassword());
+            fileWriter.close();
+        } catch (IOException e) {
+            System.out.println("An error occurred while saving the employee's information.");
+            e.printStackTrace();
+        }
+    }
 
     public Customer findCustomer(String customerName)
     {
@@ -70,7 +121,20 @@ public class UserManager {
         }
         return customer;
     }
-
+    public List<String> getAllCustomerNames()
+    {
+        List<String> customerNames = new ArrayList<>();
+        for(Customer c : customers)
+            customerNames.add(c.getName());
+        return customerNames;
+    }
+    public List<String> getAllEmployeeNames()
+    {
+        List<String> employeeNames = new ArrayList<>();
+        for(Employee e : employees)
+            employeeNames.add(e.getName());
+        return employeeNames;
+    }
     public Employee findEmployee(String employeeName)
     {
         Employee employee = null;
