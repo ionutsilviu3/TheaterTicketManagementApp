@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
@@ -162,6 +163,7 @@ public class UIManager {
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(10));
         root.getChildren().addAll(topContainer, ticketsTableView, topUpContainer, bottomContainer);
+        root.setStyle("-fx-background-color: dimgrey;");
         customerScene = new Scene(root, 800, 600);
         return customerScene;
 
@@ -235,30 +237,41 @@ public class UIManager {
         Tab deleteTicketsTab = new Tab("Delete Tickets");
         deleteTicketsTab.setContent(createTicketDeleter());
         tabPane.getTabs().addAll(viewCustomersTab, viewTicketsTab, addTicketsTab, deleteTicketsTab);
-
+        tabPane.setStyle("-fx-background-color: dimgrey;");
         employeeScene = new Scene(tabPane, 800, 600);
         return employeeScene;
     }
 
     private VBox createTicketAdder() {
         Label playNameLabel = new Label("Play Name:");
+        playNameLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
         TextField playNameField = new TextField();
+
         Label priceLabel = new Label("Price:");
+        priceLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
         TextField priceField = new TextField();
+
         Label seatNumberLabel = new Label("Seat Number:");
+        seatNumberLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
         TextField seatNumberField = new TextField();
+
         Label dateDayLabel = new Label("Day:");
+        dateDayLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
         TextField dateDayField = new TextField();
         Label dateMonthLabel = new Label("Month:");
+        dateMonthLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
         TextField dateMonthField = new TextField();
         Label dateYearLabel = new Label("Year:");
+        dateYearLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
         TextField dateYearField = new TextField();
 
         Label timeHourLabel = new Label("Hour:");
+        timeHourLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
         TextField timeHourField = new TextField();
         Label timeMinuteLabel = new Label("Minute:");
+        timeMinuteLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
         TextField timeMinuteField = new TextField();
-        Button createButton = new Button("Create");
+        Button createButton = new Button("Add ticket");
         createButton.setOnAction(event -> {
             try {
                 theaterTicketManager.createTheaterTicket(playNameField.getText(),
@@ -301,10 +314,12 @@ public class UIManager {
 
     private VBox createTicketDeleter() {
         Label deletePlayNameLabel = new Label("Play Name:");
+        deletePlayNameLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
         TextField deletePlayNameField = new TextField();
         Label deleteSeatNumberLabel = new Label("Seat Number:");
+        deleteSeatNumberLabel.setStyle("-fx-font-size: 14px; -fx-font-weight: bold;");
         TextField deleteSeatNumberField = new TextField();
-        Button deleteButton = new Button("Delete");
+        Button deleteButton = new Button("Delete ticket");
         deleteButton.setOnAction(event -> {
             try {
                 theaterTicketManager.deleteTheaterTicket(deletePlayNameField.getText(), Integer.parseInt(deleteSeatNumberField.getText()));
@@ -422,7 +437,7 @@ public class UIManager {
         Label titleLabel = createLabel("Theater Tickets Management App", FontWeight.BOLD, 20);
 
         // Create description label
-        Label descriptionLabel = createLabel("What are you ?", FontWeight.NORMAL, 14);
+        Label descriptionLabel = createLabel("Pop quiz!! You are an:", FontWeight.NORMAL, 16);
 
         // Create left and right containers for buttons
         VBox leftContainer = new VBox(20);
@@ -456,7 +471,7 @@ public class UIManager {
         Button button = new Button(text);
         button.setPrefWidth(200);
         button.setPrefHeight(100);
-        button.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-pref-width: 800; -fx-pref-height: 700;");
+        button.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-background-color: grey; -fx-pref-width: 800; -fx-pref-height: 700;");
 
         // Set button color on hover
         button.setOnMouseEntered(event -> button.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-background-color: " + color + "; -fx-pref-width: 800; -fx-pref-height: 700;"));
@@ -475,6 +490,7 @@ public class UIManager {
     private HBox createTopLayout() {
         // Create label for credit
         creditLabel = new Label();
+        creditLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
         creditLabel.textProperty().bind(new ReadOnlyStringWrapper(new String("Credit: " + customer.getCredit())));
 
         // Create top container for back arrow and label
@@ -502,15 +518,24 @@ public class UIManager {
         logInLayout.setHgap(10);
         logInLayout.setVgap(10);
         logInLayout.setPadding(new Insets(25, 25, 25, 25));
+        Label title = createLabel("Enter your credentials to start the act ;)", FontWeight.BOLD, 20);
+
         logInUsernameField = new TextField();
+        logInUsernameField.setPromptText("Don't be shy, tell me your name");
         logInPasswordField = new PasswordField();
+        logInPasswordField.setPromptText("It stays between us, promise");
         Label logInUsernameLabel = new Label("Username");
         Label logInPasswordLabel = new Label("Password");
-        logInLayout.add(logInUsernameLabel, 0, 0);
-        logInLayout.add(logInUsernameField, 1, 0);
-        logInLayout.add(logInPasswordLabel, 0, 1);
-        logInLayout.add(logInPasswordField, 1, 1);
-        logInLayout.add(logInButton, 1, 2);
+        logInLayout.add(title, 0, 0, 2, 1); // Add the title label to the layout, spanning 2 columns
+
+        logInLayout.add(logInUsernameLabel, 0, 1);
+        logInLayout.add(logInUsernameField, 1, 1);
+        logInLayout.add(logInPasswordLabel, 0, 2);
+        logInLayout.add(logInPasswordField, 1, 2);
+        logInButton.setStyle("-fx-background-color: teal;");
+        logInLayout.add(logInButton, 1, 3);
+
+        logInLayout.setValignment(title, VPos.TOP);
         logInScene = new Scene(logInLayout, 800, 600);
         return logInScene;
     }
